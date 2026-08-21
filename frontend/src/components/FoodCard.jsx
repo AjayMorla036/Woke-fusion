@@ -8,7 +8,7 @@ export default function FoodCard({ name, price, description, image, isPopular })
       <div className="food-info">
         <div className="food-header">
           <h3 className="food-name">{name}</h3>
-          <span className="food-price">${price}</span>
+          <span className="food-price">{price}</span>
         </div>
         <p className="food-desc">{description}</p>
         <button className="food-btn">Add to Order</button>

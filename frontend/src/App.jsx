@@ -154,7 +154,7 @@ export default function App() {
         </div>
       </section>
 
-      <footer style={{ textAlign: 'center', padding: '4rem 2rem', background: '#050505', borderTop: '1px solid var(--border)', color: 'var(--text-muted)' }}>
+      <footer id="contact" style={{ textAlign: 'center', padding: '4rem 2rem', background: '#050505', borderTop: '1px solid var(--border)', color: 'var(--text-muted)' }}>
         <div className="logo" style={{ justifyContent: 'center', marginBottom: '1.5rem' }}>Wok<span style={{ color: '#fff' }}>Fusion</span></div>
         <p style={{ marginBottom: '0.5rem' }}>Take-Out Only • +44 7741 033746</p>
         <p>© 2026 Wok Fusion. All rights reserved.</p>
