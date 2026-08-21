@@ -1,13 +1,6 @@
 // Functional test for the one interactive element on every food card.
-//
-// "Add to Order" currently has no onClick handler at all - there is no
-// cart/order state anywhere in the app (confirmed: no useState in src/).
-// That's a real functional gap given the site's whole purpose is to let
-// customers order food, so it's covered here two ways:
-//   1. A real test for what exists today (the button renders correctly).
-//   2. A test.fixme() for the behavior that SHOULD exist once ordering
-//      is implemented (Phase 2 of the roadmap) - this is the "should
-//      exist but is blocked" case, not a false failure.
+// Cart behavior itself (quantities, subtotal, WhatsApp handoff) lives in
+// cart.spec.js - this file stays focused on the button on the card.
 
 import { test, expect } from "@playwright/test";
 
@@ -21,19 +14,20 @@ test.describe("Food card - Add to Order", () => {
     await expect(buttons.first()).toBeEnabled();
   });
 
-  test.fixme(
-    "clicking Add to Order adds the item to a visible cart/order summary",
-    async ({ page }) => {
-      // Blocked: no cart state, cart indicator, or order summary exists
-      // yet anywhere in the app. This defines the contract the Phase 2
-      // "make ordering work" feature needs to satisfy - once a cart
-      // indicator exists, replace the selector below with the real one.
-      await page.goto("/");
+  test("clicking Add to Order updates the cart badge and shows brief confirmation", async ({
+    page,
+  }) => {
+    await page.goto("/");
 
-      const firstCard = page.locator(".food-card").first();
-      await firstCard.getByRole("button", { name: "Add to Order" }).click();
+    const firstCard = page.locator(".food-card").first();
+    await firstCard.getByRole("button", { name: "Add to Order" }).click();
 
-      await expect(page.getByTestId("cart-count")).toHaveText("1");
-    }
-  );
+    await expect(page.getByTestId("cart-count")).toHaveText("1");
+    await expect(firstCard.getByRole("button", { name: "Added ✓" })).toBeVisible();
+
+    // The confirmation reverts back to the normal label after a moment.
+    await expect(firstCard.getByRole("button", { name: "Add to Order" })).toBeVisible({
+      timeout: 3000,
+    });
+  });
 });

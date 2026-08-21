@@ -1,5 +1,7 @@
 import Hero from "./components/Hero";
 import FoodCard from "./components/FoodCard";
+import CartDrawer from "./components/CartDrawer";
+import { useCart } from "./context/useCart";
 import "./index.css";
 
 export default function App() {
@@ -84,17 +86,27 @@ export default function App() {
     }
   ];
 
+  const { itemCount, toggleCart } = useCart();
+
   return (
     <div className="app-container">
       <nav className="navbar">
         <div className="logo">Wok<span style={{ color: '#fff' }}>Fusion</span></div>
-        <div className="nav-links">
-          <a href="#home">Home</a>
-          <a href="#menu">Menu</a>
-          <a href="#story">Our Story</a>
-          <a href="#contact">Contact</a>
+        <div className="nav-right">
+          <div className="nav-links">
+            <a href="#home">Home</a>
+            <a href="#menu">Menu</a>
+            <a href="#story">Our Story</a>
+            <a href="#contact">Contact</a>
+          </div>
+          <button className="cart-button" onClick={toggleCart} aria-label="View your order">
+            🛒
+            <span className="cart-count" data-testid="cart-count">{itemCount}</span>
+          </button>
         </div>
       </nav>
+
+      <CartDrawer />
 
       <div id="home">
         <Hero />
