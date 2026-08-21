@@ -1,5 +1,6 @@
-// Functional / E2E tests for the cart drawer and WhatsApp order handoff
-// (Phase 2 of the roadmap: make "Add to Order" actually do something).
+// Functional / E2E tests for the cart drawer itself (adding, quantities,
+// removing). The checkout form and order-submission flow have their own
+// dedicated file: checkout.spec.js.
 
 import { test, expect } from "@playwright/test";
 
@@ -75,33 +76,16 @@ test.describe("Cart drawer", () => {
     await expect(page.getByTestId("cart-count")).toHaveText("0");
   });
 
-  test('shows an approximate-pricing note when a "From" priced item is in the cart', async ({
+  test("a non-empty cart shows a Proceed to Checkout button instead of a WhatsApp link", async ({
     page,
   }) => {
-    await page.goto("/");
-
-    await addItemByName(page, "Custom Bento Box");
-    await page.getByRole("button", { name: "View your order" }).click();
-
-    await expect(page.getByText(/may vary based on your Bento Box choices/)).toBeVisible();
-  });
-
-  test("Order via WhatsApp link is correctly formed with the order details", async ({ page }) => {
     await page.goto("/");
 
     await addItemByName(page, "Butter Chicken");
     await page.getByRole("button", { name: "View your order" }).click();
 
-    const whatsAppLink = page.getByRole("link", { name: "Order via WhatsApp" });
-    const href = await whatsAppLink.getAttribute("href");
-
-    expect(href.startsWith("https://wa.me/447741033746?text=")).toBe(true);
-
-    const encodedMessage = href.split("?text=")[1];
-    const message = decodeURIComponent(encodedMessage);
-
-    expect(message).toContain("1x Butter Chicken - £10.95");
-    expect(message).toContain("Subtotal: £10.95");
+    await expect(page.getByRole("button", { name: "Proceed to Checkout" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Order via WhatsApp" })).toHaveCount(0);
   });
 
   test("closing the drawer via the × button hides it again", async ({ page }) => {

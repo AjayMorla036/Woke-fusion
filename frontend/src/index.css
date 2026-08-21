@@ -42,6 +42,7 @@ h4 {
   width: 100%;
   padding: 1.5rem 5rem;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   z-index: 1000;
@@ -127,6 +128,35 @@ h4 {
   align-items: center;
   justify-content: center;
   padding: 0 4px;
+}
+
+.mobile-nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-main);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.mobile-nav-panel {
+  flex-basis: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-top: 1.5rem;
+}
+
+.mobile-nav-panel a {
+  color: var(--text-main);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.mobile-nav-panel a:hover {
+  color: var(--primary);
 }
 
 /* Cart drawer */
@@ -239,20 +269,149 @@ h4 {
   border-top: 1px solid var(--border);
 }
 
-.cart-note {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  margin-bottom: 1rem;
-}
-
 .cart-checkout {
   width: 100%;
   text-align: center;
 }
 
+.order-countdown {
+  background: rgba(255, 69, 0, 0.08);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.5rem;
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+.order-countdown-label {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.order-countdown-time {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.cart-note {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.cart-note a {
+  color: var(--primary);
+  font-weight: 600;
+}
+
 .food-btn-added {
   background: #2e7d32;
   color: #fff;
+}
+
+/* Bento Box configurator */
+.bento-configurator {
+  width: 100%;
+  max-width: 440px;
+  max-height: 100%;
+  background: var(--bg-card);
+  border-left: 1px solid var(--border);
+  padding: 2rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.bento-field {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.bento-label,
+.bento-field label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.bento-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.bento-option {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.bento-option.selected {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #1a0a00;
+  font-weight: 600;
+}
+
+.bento-field select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Checkout form */
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkout-form .bento-field input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.checkout-form .bento-field input:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.form-error {
+  color: #ff6b6b;
+  font-size: 0.85rem;
+}
+
+.form-error-general {
+  margin-bottom: 1rem;
+}
+
+.checkout-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.checkout-actions .btn {
+  flex: 1;
 }
 
 /* Hero Section */
@@ -678,6 +837,11 @@ h4 {
     display: none;
   }
 
+  .mobile-nav-toggle {
+    display: flex;
+    align-items: center;
+  }
+
   .hero-actions {
     flex-direction: column;
   }
@@ -688,5 +852,81 @@ h4 {
 
   .section-title {
     font-size: 2.5rem;
+  }
+
+  /* Tighter section spacing - the desktop 8rem top/bottom padding and
+     generous category-header margins meant a phone screen only ever
+     showed about one food card at a time. */
+  .menu-section {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+
+  .menu-category-title {
+    font-size: 1.6rem;
+    margin-top: 1rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .menu-category-desc {
+    margin-bottom: 1.25rem;
+    font-size: 0.95rem;
+  }
+
+  /* Compact, horizontal food cards - image beside the text instead of
+     on top, so several items fit in view without heavy scrolling. */
+  .menu-grid {
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .food-card {
+    flex-direction: row;
+  }
+
+  .food-img-wrapper {
+    width: 110px;
+    height: 110px;
+    flex-shrink: 0;
+  }
+
+  .food-info {
+    padding: 0.85rem 1rem;
+  }
+
+  .food-header {
+    margin-bottom: 0.35rem;
+  }
+
+  .food-name {
+    font-size: 1.02rem;
+  }
+
+  .food-price {
+    font-size: 1rem;
+    white-space: nowrap;
+  }
+
+  .food-desc {
+    font-size: 0.82rem;
+    line-height: 1.35;
+    margin-bottom: 0.6rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .food-btn {
+    padding: 0.55rem;
+    font-size: 0.85rem;
+  }
+
+  .food-badge {
+    top: 0.4rem;
+    right: 0.4rem;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.7rem;
   }
 }

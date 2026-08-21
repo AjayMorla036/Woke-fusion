@@ -2,7 +2,7 @@ export default function Hero() {
   return (
     <section className="hero">
       <div className="hero-bg">
-        <img src="https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&q=80&w=2000" alt="Wok Cooking" />
+        <img src="/images/hero-wok-cooking.jpg" alt="Wok Cooking" />
       </div>
       <div className="hero-overlay"></div>
 

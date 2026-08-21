@@ -48,8 +48,6 @@ export function CartProvider({ children }) {
     [items]
   );
 
-  const hasApproximatePricing = items.some((item) => item.price.startsWith("From"));
-
   const value = {
     items,
     addItem,
@@ -58,7 +56,6 @@ export function CartProvider({ children }) {
     clearCart,
     itemCount,
     subtotal,
-    hasApproximatePricing,
     isOpen,
     openCart: () => setIsOpen(true),
     closeCart: () => setIsOpen(false),

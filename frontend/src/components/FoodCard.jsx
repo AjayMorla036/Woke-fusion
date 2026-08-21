@@ -2,7 +2,16 @@ import { useEffect, useState } from "react";
 import { useCart } from "../context/useCart";
 import { parsePrice } from "../utils/price";
 
-export default function FoodCard({ id, name, price, description, image, isPopular }) {
+export default function FoodCard({
+  id,
+  name,
+  price,
+  description,
+  image,
+  isPopular,
+  configurable,
+  onCustomize,
+}) {
   const { addItem } = useCart();
   const [justAdded, setJustAdded] = useState(false);
 
@@ -29,12 +38,18 @@ export default function FoodCard({ id, name, price, description, image, isPopula
           <span className="food-price">{price}</span>
         </div>
         <p className="food-desc">{description}</p>
-        <button
-          className={`food-btn${justAdded ? " food-btn-added" : ""}`}
-          onClick={handleAddToOrder}
-        >
-          {justAdded ? "Added ✓" : "Add to Order"}
-        </button>
+        {configurable ? (
+          <button className="food-btn" onClick={onCustomize}>
+            Customize &amp; Add
+          </button>
+        ) : (
+          <button
+            className={`food-btn${justAdded ? " food-btn-added" : ""}`}
+            onClick={handleAddToOrder}
+          >
+            {justAdded ? "Added ✓" : "Add to Order"}
+          </button>
+        )}
       </div>
     </div>
   );

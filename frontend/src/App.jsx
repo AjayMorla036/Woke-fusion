@@ -1,10 +1,15 @@
+import { useState } from "react";
 import Hero from "./components/Hero";
 import FoodCard from "./components/FoodCard";
 import CartDrawer from "./components/CartDrawer";
+import BentoBoxConfigurator from "./components/BentoBoxConfigurator";
 import { useCart } from "./context/useCart";
+import { RESTAURANT_PHONE_DISPLAY } from "./data/contact";
 import "./index.css";
 
 export default function App() {
+  const [configuringItem, setConfiguringItem] = useState(null);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const menuCategories = [
     {
       category: "1. BENTO BOX (Build Your Meal)",
@@ -14,9 +19,10 @@ export default function App() {
           id: 101,
           name: "Custom Bento Box",
           price: "From £8.95",
-          description: "Build your perfect box. 1. Base (Egg/Veg Fried Rice, Hakka Noodles, Plain Rice, Spicy Chips) 2. Protein (Chicken, Beef, Prawns, Paneer, Soya) 3. Sauce (Chinese/Indian style) 4. Dry Item.",
+          description: "Build your perfect box. 1. Size (Value/Regular/Large) 2. Base (Egg/Veg Fried Rice, Hakka Noodles, Plain Rice, Spicy Chips) 3. Protein (Chicken, Beef, Prawns, Paneer, Soya) 4. Sauce (Chinese/Indian style) 5. Dry Item (2 Spring Rolls - choose the style).",
           image: "/bento-box.png",
-          isPopular: true
+          isPopular: true,
+          configurable: true
         }
       ]
     },
@@ -24,69 +30,69 @@ export default function App() {
       category: "2. INDIAN CURRIES",
       description: "Core Identity Section. Served with Steamed Rice, Jeera Rice, or Naan.",
       items: [
-        { id: 201, name: "Butter Chicken", price: "£10.95", description: "Rich, creamy tomato gravy with tender chicken tikka pieces.", image: "https://images.unsplash.com/photo-1604014237800-1c9102c219da?auto=format&fit=crop&q=80&w=800", isPopular: true },
-        { id: 202, name: "Chicken Tikka Masala", price: "£10.95", description: "Classic roasted chicken chunks in a spicy, creamy orange curry sauce.", image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=800" },
-        { id: 203, name: "Mutton Rogan Josh", price: "£12.95", description: "Aromatic slow-cooked lamb curry with Kashmiri chilies.", image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&q=80&w=800" },
-        { id: 204, name: "Paneer Butter Masala", price: "£9.95", description: "Soft paneer cubes in a rich, buttery tomato sauce. (Veg)", image: "https://images.unsplash.com/photo-1631452180519-c014fe946bc0?auto=format&fit=crop&q=80&w=800", isPopular: true },
-        { id: 205, name: "Dal Tadka", price: "£7.95", description: "Yellow lentils tempered with cumin, garlic, and chilies. (Veg)", image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&q=80&w=800" }
+        { id: 201, name: "Butter Chicken", price: "£10.95", description: "Rich, creamy tomato gravy with tender chicken tikka pieces.", image: "/images/butter-chicken.jpg", isPopular: true },
+        { id: 202, name: "Chicken Tikka Masala", price: "£10.95", description: "Classic roasted chicken chunks in a spicy, creamy orange curry sauce.", image: "/images/chicken-tikka-masala.jpg" },
+        { id: 203, name: "Mutton Rogan Josh", price: "£12.95", description: "Aromatic slow-cooked lamb curry with Kashmiri chilies.", image: "/images/mutton-rogan-josh.jpg" },
+        { id: 204, name: "Paneer Butter Masala", price: "£9.95", description: "Soft paneer cubes in a rich, buttery tomato sauce. (Veg)", image: "/images/paneer-butter-masala.jpg", isPopular: true },
+        { id: 205, name: "Dal Tadka", price: "£7.95", description: "Yellow lentils tempered with cumin, garlic, and chilies. (Veg)", image: "/images/dal-tadka.jpg" }
       ]
     },
     {
       category: "3. KOTHU & GORENG",
       description: "Signature Street Section - Sri Lankan Favorites",
       items: [
-        { id: 301, name: "Chicken Kothu", price: "£9.50", description: "Shredded godamba roti stir-fried with chicken, egg, onion, and spices.", image: "https://images.unsplash.com/photo-1626804475297-4160cbade7f1?auto=format&fit=crop&q=80&w=800", isPopular: true },
-        { id: 302, name: "Mutton Kothu", price: "£10.95", description: "Classic Sri Lankan street food with tender mutton pieces.", image: "https://images.unsplash.com/photo-1626804475297-4160cbade7f1?auto=format&fit=crop&q=80&w=800" },
-        { id: 303, name: "Nasi Goreng (Chicken/Prawn/Beef/Veg)", price: "From £9.95", description: "Smokey aromatic stir-fried rice with spices. Served with fried egg.", image: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80&w=800", isPopular: true }
+        { id: 301, name: "Chicken Kothu", price: "£9.50", description: "Shredded godamba roti stir-fried with chicken, egg, onion, and spices.", image: "/images/chicken-kothu.jpg", isPopular: true },
+        { id: 302, name: "Mutton Kothu", price: "£10.95", description: "Classic Sri Lankan street food with tender mutton pieces.", image: "/images/chicken-kothu.jpg" },
+        { id: 303, name: "Nasi Goreng (Chicken/Prawn/Beef/Veg)", price: "From £9.95", description: "Smokey aromatic stir-fried rice with spices. Served with fried egg.", image: "/images/nasi-goreng.jpg", isPopular: true }
       ]
     },
     {
       category: "4. NOODLES & RICE",
       description: "Dual Cuisine System: Chinese Style & Indian-Chinese Fusion",
       items: [
-        { id: 401, name: "Hakka Noodles", price: "£8.95", description: "Classic street-style wok tossed noodles with shredded vegetables. (Chinese Style)", image: "https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&q=80&w=800" },
-        { id: 402, name: "Chilli Garlic Noodles", price: "£9.50", description: "Spicy and garlicky wok-tossed noodles. (Indian-Chinese Fusion)", image: "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&q=80&w=800", isPopular: true },
-        { id: 403, name: "Triple Schezwan Rice", price: "£10.95", description: "A fiery combination of rice, noodles, and crispy fried noodles in schezwan sauce.", image: "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&q=80&w=800" }
+        { id: 401, name: "Hakka Noodles", price: "£8.95", description: "Classic street-style wok tossed noodles with shredded vegetables. (Chinese Style)", image: "/images/hakka-noodles.jpg" },
+        { id: 402, name: "Chilli Garlic Noodles", price: "£9.50", description: "Spicy and garlicky wok-tossed noodles. (Indian-Chinese Fusion)", image: "/images/chilli-garlic-noodles.jpg", isPopular: true },
+        { id: 403, name: "Triple Schezwan Rice", price: "£10.95", description: "A fiery combination of rice, noodles, and crispy fried noodles in schezwan sauce.", image: "/images/triple-schezwan-rice.jpg" }
       ]
     },
     {
       category: "5. WOK WINGS 🍗",
       description: "Crispy, Juicy, Addictive.",
       items: [
-        { id: 501, name: "Salt & Pepper Wings", price: "£6.50", description: "Crispy wings tossed with sea salt, cracked pepper, and fresh chilies.", image: "https://images.unsplash.com/photo-1524114664604-cd8133cd67ad?auto=format&fit=crop&q=80&w=800", isPopular: true },
-        { id: 502, name: "Teriyaki Wings", price: "£6.50", description: "Sweet and sticky glazed wok wings.", image: "https://images.unsplash.com/photo-1524114664604-cd8133cd67ad?auto=format&fit=crop&q=80&w=800" },
-        { id: 503, name: "Indian Tandoori Wings", price: "£6.95", description: "Fusion wings marinated in tandoori spices and wok-tossed.", image: "https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?auto=format&fit=crop&q=80&w=800" }
+        { id: 501, name: "Salt & Pepper Wings", price: "£6.50", description: "Crispy wings tossed with sea salt, cracked pepper, and fresh chilies.", image: "/images/wok-wings.jpg", isPopular: true },
+        { id: 502, name: "Teriyaki Wings", price: "£6.50", description: "Sweet and sticky glazed wok wings.", image: "/images/wok-wings.jpg" },
+        { id: 503, name: "Indian Tandoori Wings", price: "£6.95", description: "Fusion wings marinated in tandoori spices and wok-tossed.", image: "/images/indian-tandoori-wings.jpg" }
       ]
     },
     {
       category: "6. SIDES, WRAPS & EXTRAS",
       description: "Rolls, Wraps, Dumplings and Loaded Fries.",
       items: [
-        { id: 601, name: "Veg / Chicken Spring Rolls", price: "£4.50", description: "Crispy fried rolls served with sweet chili dip.", image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800" },
-        { id: 602, name: "Chicken Tikka Wrap", price: "£6.50", description: "Tandoori chicken tikka wrapped in a soft tortilla with mint chutney.", image: "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&q=80&w=800", isPopular: true },
-        { id: 603, name: "Loaded Masala Fries", price: "£5.50", description: "Crispy fries topped with spicy masala sauce and cheese.", image: "https://images.unsplash.com/photo-1534080564583-6be75777b70a?auto=format&fit=crop&q=80&w=800" },
-        { id: 604, name: "Dumplings (Veg / Chicken)", price: "£5.95", description: "Steamed or pan-fried dumplings.", image: "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?auto=format&fit=crop&q=80&w=800" }
+        { id: 601, name: "Veg / Chicken Spring Rolls", price: "£4.50", description: "Crispy fried rolls served with sweet chili dip.", image: "/images/spring-rolls.jpg" },
+        { id: 602, name: "Chicken Tikka Wrap", price: "£6.50", description: "Tandoori chicken tikka wrapped in a soft tortilla with mint chutney.", image: "/images/chicken-tikka-wrap.jpg", isPopular: true },
+        { id: 603, name: "Loaded Masala Fries", price: "£5.50", description: "Crispy fries topped with spicy masala sauce and cheese.", image: "/images/loaded-masala-fries.jpg" },
+        { id: 604, name: "Dumplings (Veg / Chicken)", price: "£5.95", description: "Steamed or pan-fried dumplings.", image: "/images/dumplings.jpg" }
       ]
     },
     {
       category: "7. DESSERTS 🍰",
       description: "Sweet endings to a spicy meal.",
       items: [
-        { id: 701, name: "Gulab Jamun", price: "£3.95", description: "Deep-fried dough balls soaked in sweet, sticky sugar syrup.", image: "https://images.unsplash.com/photo-1589131652433-28ebbe804bd8?auto=format&fit=crop&q=80&w=800" },
-        { id: 702, name: "Boba Cheesecake", price: "£5.50", description: "Our special fusion dessert. Creamy cheesecake topped with boba pearls.", image: "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&q=80&w=800", isPopular: true }
+        { id: 701, name: "Gulab Jamun", price: "£3.95", description: "Deep-fried dough balls soaked in sweet, sticky sugar syrup.", image: "/images/gulab-jamun.jpg" },
+        { id: 702, name: "Boba Cheesecake", price: "£5.50", description: "Our special fusion dessert. Creamy cheesecake topped with boba pearls.", image: "/images/boba-cheesecake.jpg", isPopular: true }
       ]
     },
     {
       category: "8. DRINKS 🥤",
       description: "Refreshing beverages.",
       items: [
-        { id: 801, name: "Mango Lassi", price: "£3.50", description: "Classic sweet and rich yogurt-based mango drink.", image: "https://images.unsplash.com/photo-1546892694-52a16d56d116?auto=format&fit=crop&q=80&w=800", isPopular: true },
-        { id: 802, name: "Masala Chai", price: "£2.50", description: "Authentic Indian spiced tea.", image: "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?auto=format&fit=crop&q=80&w=800" }
+        { id: 801, name: "Mango Lassi", price: "£3.50", description: "Classic sweet and rich yogurt-based mango drink.", image: "/images/mango-lassi.jpg", isPopular: true },
+        { id: 802, name: "Masala Chai", price: "£2.50", description: "Authentic Indian spiced tea.", image: "/images/masala-chai.jpg" }
       ]
     }
   ];
 
-  const { itemCount, toggleCart } = useCart();
+  const { itemCount, toggleCart, addItem } = useCart();
 
   return (
     <div className="app-container">
@@ -103,10 +109,39 @@ export default function App() {
             🛒
             <span className="cart-count" data-testid="cart-count">{itemCount}</span>
           </button>
+          <button
+            className="mobile-nav-toggle"
+            aria-label={isMobileNavOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMobileNavOpen}
+            onClick={() => setIsMobileNavOpen((open) => !open)}
+          >
+            {isMobileNavOpen ? "✕" : "☰"}
+          </button>
         </div>
+
+        {isMobileNavOpen && (
+          <div className="mobile-nav-panel">
+            <a href="#home" onClick={() => setIsMobileNavOpen(false)}>Home</a>
+            <a href="#menu" onClick={() => setIsMobileNavOpen(false)}>Menu</a>
+            <a href="#story" onClick={() => setIsMobileNavOpen(false)}>Our Story</a>
+            <a href="#contact" onClick={() => setIsMobileNavOpen(false)}>Contact</a>
+          </div>
+        )}
       </nav>
 
       <CartDrawer />
+
+      {configuringItem && (
+        <BentoBoxConfigurator
+          baseId={configuringItem.id}
+          baseName={configuringItem.name}
+          onClose={() => setConfiguringItem(null)}
+          onAdd={(configuredItem) => {
+            addItem(configuredItem);
+            setConfiguringItem(null);
+          }}
+        />
+      )}
 
       <div id="home">
         <Hero />
@@ -131,7 +166,11 @@ export default function App() {
               <p className="menu-category-desc">{category.description}</p>
               <div className="menu-grid">
                 {category.items.map(item => (
-                  <FoodCard key={item.id} {...item} />
+                  <FoodCard
+                    key={item.id}
+                    {...item}
+                    onCustomize={() => setConfiguringItem(item)}
+                  />
                 ))}
               </div>
             </div>
@@ -157,18 +196,18 @@ export default function App() {
             </p>
             <div className="owner-info">
               <p><strong>Maicheal Addeti</strong> - Founder</p>
-              <p>Phone: +44 7741 033746</p>
+              <p>Phone: {RESTAURANT_PHONE_DISPLAY}</p>
             </div>
           </div>
           <div className="story-image">
-            <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=800" alt="Restaurant atmosphere" />
+            <img src="/images/restaurant-atmosphere.jpg" alt="Restaurant atmosphere" />
           </div>
         </div>
       </section>
 
       <footer id="contact" style={{ textAlign: 'center', padding: '4rem 2rem', background: '#050505', borderTop: '1px solid var(--border)', color: 'var(--text-muted)' }}>
         <div className="logo" style={{ justifyContent: 'center', marginBottom: '1.5rem' }}>Wok<span style={{ color: '#fff' }}>Fusion</span></div>
-        <p style={{ marginBottom: '0.5rem' }}>Take-Out Only • +44 7741 033746</p>
+        <p style={{ marginBottom: '0.5rem' }}>Take-Out Only • {RESTAURANT_PHONE_DISPLAY}</p>
         <p>© 2026 Wok Fusion. All rights reserved.</p>
       </footer>
     </div>

@@ -28,20 +28,43 @@ test.describe("Responsive layout", () => {
     await expect(page.locator(".nav-links")).toBeHidden();
   });
 
-  test.fixme(
-    "there is a way to reach Menu/Story/Contact navigation on mobile",
-    async ({ page }) => {
-      // Blocked: .nav-links is hidden below 768px (see index.css) and no
-      // hamburger menu / mobile nav toggle exists anywhere in src/ (no
-      // useState at all in the codebase). Below 768px, a visitor has no
-      // way to navigate except manual scrolling. Once a mobile menu
-      // toggle is built, replace this with a real assertion for it.
-      await page.setViewportSize({ width: 600, height: 800 });
-      await page.goto("/");
+  test("the mobile menu toggle is hidden on desktop widths", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("/");
 
-      await expect(page.getByRole("button", { name: /menu/i })).toBeVisible();
-    }
-  );
+    await expect(page.getByRole("button", { name: "Open menu" })).toBeHidden();
+  });
+
+  test("the hamburger toggle opens a panel with all four nav links on mobile", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 600, height: 800 });
+    await page.goto("/");
+
+    await page.getByRole("button", { name: "Open menu" }).click();
+
+    const panel = page.locator(".mobile-nav-panel");
+    await expect(panel.getByRole("link", { name: "Home" })).toBeVisible();
+    await expect(panel.getByRole("link", { name: "Menu" })).toBeVisible();
+    await expect(panel.getByRole("link", { name: "Our Story" })).toBeVisible();
+    await expect(panel.getByRole("link", { name: "Contact" })).toBeVisible();
+
+    // The toggle itself flips to a close affordance while open.
+    await expect(page.getByRole("button", { name: "Close menu" })).toBeVisible();
+  });
+
+  test("tapping a mobile nav link scrolls to the section and closes the panel", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 600, height: 800 });
+    await page.goto("/");
+
+    await page.getByRole("button", { name: "Open menu" }).click();
+    await page.locator(".mobile-nav-panel").getByRole("link", { name: "Our Story" }).click();
+
+    await expect(page.locator(".mobile-nav-panel")).toHaveCount(0);
+    await expect(page.locator("#story")).toBeInViewport();
+  });
 
   test("hero heading and CTA remain visible on a small phone viewport", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
