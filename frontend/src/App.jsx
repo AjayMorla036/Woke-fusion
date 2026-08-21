@@ -20,7 +20,7 @@ export default function App() {
           name: "Custom Bento Box",
           price: "From £8.95",
           description: "Build your perfect box. 1. Size (Value/Regular/Large) 2. Base (Egg/Veg Fried Rice, Hakka Noodles, Plain Rice, Spicy Chips) 3. Protein (Chicken, Beef, Prawns, Paneer, Soya) 4. Sauce (Chinese/Indian style) 5. Dry Item (2 Spring Rolls - choose the style).",
-          image: "/bento-box.png",
+          image: "/images/bento-box.jpg",
           isPopular: true,
           configurable: true
         }
@@ -42,7 +42,7 @@ export default function App() {
       description: "Signature Street Section - Sri Lankan Favorites",
       items: [
         { id: 301, name: "Chicken Kothu", price: "£9.50", description: "Shredded godamba roti stir-fried with chicken, egg, onion, and spices.", image: "/images/chicken-kothu.jpg", isPopular: true },
-        { id: 302, name: "Mutton Kothu", price: "£10.95", description: "Classic Sri Lankan street food with tender mutton pieces.", image: "/images/chicken-kothu.jpg" },
+        { id: 302, name: "Mutton Kothu", price: "£10.95", description: "Classic Sri Lankan street food with tender mutton pieces.", image: "/images/mutton-kothu.jpg" },
         { id: 303, name: "Nasi Goreng (Chicken/Prawn/Beef/Veg)", price: "From £9.95", description: "Smokey aromatic stir-fried rice with spices. Served with fried egg.", image: "/images/nasi-goreng.jpg", isPopular: true }
       ]
     },
